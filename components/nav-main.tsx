@@ -9,12 +9,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { role } from '@/lib/settings'
 import Link from 'next/link'
 
-const getRole = role
 export function NavMain({
   items,
+  role,
 }: {
   items: {
     title: string
@@ -23,6 +22,7 @@ export function NavMain({
     isActive?: boolean
     visible?: string[]
   }[]
+  role: string
 }) {
   return (
     <SidebarGroup>

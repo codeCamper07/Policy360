@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 const Hero06 = () => {
   const router = useRouter()
   const handleGetStarted = () => {
-    router.push('/admin')
+    router.push('/login')
   }
   return (
     <div className='min-h-screen flex items-center justify-center px-6'>

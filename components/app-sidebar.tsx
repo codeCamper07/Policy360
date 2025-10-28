@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/sidebar'
 import Link from 'next/link'
 import Image from 'next/image'
-import { role } from '@/lib/settings'
+import { authClient } from '@/lib/auth-client'
 
 // This is sample data.
 const data = {
@@ -51,6 +51,13 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = authClient.useSession()
+  const role = session?.user?.role
+  const userData = {
+    name: session?.user?.name || '',
+    email: session?.user?.email || '',
+    avatar: '',
+  }
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
@@ -75,10 +82,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarSeparator className='w-full' />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} role={role || ''} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

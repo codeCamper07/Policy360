@@ -1,6 +1,6 @@
 'use client'
 
-import { Logo } from '@/components/navbar-02/logo'
+import { Logo } from '../../../components/navbar-02/logo'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -12,25 +12,28 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
-import { signIn } from '@/server/user'
+import { adminSignIn } from '@/server/user'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 const formSchema = z.object({
-  username: z.string().min(10, 'UseId should be atleast 10 characters long'),
+  username: z.string().min(5, 'Username should be at least 5 characters long'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 })
 
-const Login05Page = () => {
+const Login04Page = () => {
   const { data: session, isPending } = authClient.useSession()
-  const role = session?.user?.role
   if (session) {
-    redirect(`${role}`)
+    redirect('/admin')
   }
+  const [loading, setLoading] = useState<Boolean>(false)
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       username: '',
@@ -40,17 +43,27 @@ const Login05Page = () => {
   })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const { success, message } = await signIn(data.username, data.password)
+    setLoading(true)
+    const { success, message } = await adminSignIn(data.username, data.password)
     if (success) {
       toast.success(message)
+      setLoading(false)
       form.reset({
         username: '',
         password: '',
       })
-      redirect('/agent')
+      router.push('/admin')
     } else {
       toast.error(message)
+      setLoading(false)
     }
+  }
+  if (isPending) {
+    return (
+      <div className='mx-auto h-screen flex flex-col justify-center items-center'>
+        <h1>Loading...!</h1>
+      </div>
+    )
   }
 
   return (
@@ -59,8 +72,9 @@ const Login05Page = () => {
         <div className='max-w-xs m-auto w-full flex flex-col items-center'>
           <Logo />
           <p className='mt-4 text-xl font-semibold tracking-tight'>
-            Log in to Policy360
+            Log in to Shadcn UI Blocks
           </p>
+
           <Form {...form}>
             <form
               className='w-full space-y-4'
@@ -70,11 +84,11 @@ const Login05Page = () => {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User Id</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
                         type='text'
-                        placeholder='TG/AP/XXXXXXXX'
+                        placeholder='Username'
                         className='w-full'
                         {...field}
                       />
@@ -102,7 +116,11 @@ const Login05Page = () => {
                 )}
               />
               <Button type='submit' className='mt-4 w-full'>
-                Login
+                {loading ? (
+                  <Loader2 className='animate-spin size-4' />
+                ) : (
+                  'Login'
+                )}
               </Button>
             </form>
           </Form>
@@ -113,26 +131,12 @@ const Login05Page = () => {
               className='text-sm block underline text-muted-foreground text-center'>
               Forgot your password?
             </Link>
-            <p className='text-sm text-center'>
-              Want to login as Admin?
-              <Link
-                href='/admin-login'
-                className='ml-1 underline text-muted-foreground'>
-                Admin Login
-              </Link>
-            </p>
           </div>
         </div>
-        <div className='bg-muted hidden lg:block rounded-lg border'>
-          <img
-            src='/login-image.jpg'
-            alt='login Style image'
-            className='w-fill h-full aspect-auto object-cover'
-          />
-        </div>
+        <div className='hidden lg:block rounded-lg border bg-linear-to-br from-blue-400 via-white to-blue-400 dark:from-blue-950 dark:via-slate-900 dark:to-blue-900' />
       </div>
     </div>
   )
 }
 
-export default Login05Page
+export default Login04Page

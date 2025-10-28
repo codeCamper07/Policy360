@@ -1,7 +1,18 @@
 import AppCalender from '@/components/appCalender'
 import { Card, CardDescription } from '@/components/ui/card'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 
-const AdminPage = () => {
+const AdminPage = async () => {
+  const session = await auth.api.getSession({ headers: await headers() })
+  const user = session?.user
+  if (user?.role !== 'admin') {
+    return (
+      <div className='h-screen mx-auto flex flex-col items-center justify-center'>
+        <h1>Unauthorized</h1>
+      </div>
+    )
+  }
   return (
     <div className='p-4 flex gap-2 max-md:flex-col'>
       {/* Left Side of the Page */}
