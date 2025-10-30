@@ -1,5 +1,4 @@
 import AppCalender from '@/components/appCalender'
-import { ChartAreaGradient } from '@/components/area-chart'
 import {
   Card,
   CardAction,
@@ -62,7 +61,6 @@ const AdminPage = async () => {
             </CardContent>
           </Card>
         </div>
-        <ChartAreaGradient />
       </div>
       {/* Right Side of the Page */}
       <div className='w-full lg:w-1/3 md:w-1/2 p-2'>
