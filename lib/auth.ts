@@ -7,6 +7,7 @@ import { admin as adminPlugin } from 'better-auth/plugins/admin'
 import { ac, admin, user, agent } from './auth/permissions'
 
 export const auth = betterAuth({
+  trustedOrigins: ['https://policy360.vercel.app', 'http://localhost:3000'],
   emailAndPassword: {
     enabled: true,
   },
