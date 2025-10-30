@@ -12,25 +12,27 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
-import { signIn } from '@/server/user'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { z } from 'zod'
 
 const formSchema = z.object({
-  username: z.string().min(10, 'UseId should be atleast 10 characters long'),
+  username: z.string().min(2, 'UseId should be atleast 2 characters long'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 })
 
 const Login05Page = () => {
+  const [loading, setLoading] = useState<Boolean>(false)
   const { data: session, isPending } = authClient.useSession()
   const role = session?.user?.role
   if (session) {
     redirect(`${role}`)
   }
+
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       username: '',
@@ -40,17 +42,20 @@ const Login05Page = () => {
   })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const { success, message } = await signIn(data.username, data.password)
-    if (success) {
-      toast.success(message)
-      form.reset({
-        username: '',
-        password: '',
-      })
-      redirect('/agent')
-    } else {
-      toast.error(message)
-    }
+    setLoading(true)
+    await authClient.signIn.username({
+      username: data.username,
+      password: data.password,
+    })
+    setLoading(false)
+  }
+
+  if (isPending) {
+    return (
+      <div className='mx-auto h-screen flex flex-col justify-center items-center'>
+        <h1>Loading...!</h1>
+      </div>
+    )
   }
 
   return (
@@ -70,11 +75,11 @@ const Login05Page = () => {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User Id</FormLabel>
+                    <FormLabel>Username/Id</FormLabel>
                     <FormControl>
                       <Input
                         type='text'
-                        placeholder='TG/AP/XXXXXXXX'
+                        placeholder='username'
                         className='w-full'
                         {...field}
                       />
@@ -102,7 +107,11 @@ const Login05Page = () => {
                 )}
               />
               <Button type='submit' className='mt-4 w-full'>
-                Login
+                {loading ? (
+                  <Loader2 className='animate-spin size=4' />
+                ) : (
+                  'Login'
+                )}
               </Button>
             </form>
           </Form>
@@ -113,14 +122,6 @@ const Login05Page = () => {
               className='text-sm block underline text-muted-foreground text-center'>
               Forgot your password?
             </Link>
-            <p className='text-sm text-center'>
-              Want to login as Admin?
-              <Link
-                href='/admin-login'
-                className='ml-1 underline text-muted-foreground'>
-                Admin Login
-              </Link>
-            </p>
           </div>
         </div>
         <div className='bg-muted hidden lg:block rounded-lg border'>

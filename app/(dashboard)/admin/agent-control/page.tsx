@@ -68,7 +68,7 @@ type Agent = {
   name: string
   phone: string | null
   email: string
-  username: string | null
+  displayUsername: string | null
 }
 
 const AdminAgentPage = () => {
@@ -139,7 +139,7 @@ const AdminAgentPage = () => {
       <Dialog>
         <Form {...form}>
           <DialogTrigger className='mb-4' asChild>
-            <Button variant='outline'>Add Agent</Button>
+            <Button variant='default'>Add Agent</Button>
           </DialogTrigger>
           <DialogContent className='sm:max-w-[425px]'>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -401,7 +401,7 @@ const AdminAgentPage = () => {
           </DialogContent>
         </Form>
       </Dialog>
-      <Table>
+      <Table className='bg-card rounded-lg'>
         <TableCaption>A list of Agents in Policy360.</TableCaption>
         <TableHeader>
           <TableRow>
@@ -412,12 +412,12 @@ const AdminAgentPage = () => {
             <TableHead className='text-right'>View</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className='rounded-xl'>
           {agents.length > 0 ? (
             agents.map((agent) => {
               return (
                 <TableRow key={agent.id}>
-                  <TableCell>{agent.username}</TableCell>
+                  <TableCell>{agent.displayUsername}</TableCell>
                   <TableCell>{agent.name}</TableCell>
                   <TableCell>{agent.phone}</TableCell>
                   <TableCell>{agent.email}</TableCell>

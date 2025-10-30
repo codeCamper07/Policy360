@@ -8,7 +8,7 @@ export const agentData = async () => {
         role: 'agent',
       },
       select: {
-        username: true,
+        displayUsername: true,
         name: true,
         email: true,
         phone: true,

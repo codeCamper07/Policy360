@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-accent`}>
         <ThemeProvider
           attribute='class'
           defaultTheme='system'
@@ -34,7 +34,7 @@ export default function RootLayout({
             <AppSidebar />
             <div className='flex flex-col w-full'>
               <Header />
-              {children}
+              <div className='overflow-y-scroll'>{children}</div>
               <Toaster />
             </div>
           </SidebarProvider>

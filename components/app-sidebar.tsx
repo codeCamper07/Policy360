@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { BookOpen, Bot, SquareTerminal } from 'lucide-react'
+import { BookOpen, Bot, SquareTerminal, HomeIcon } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
 import { NavUser } from '@/components/nav-user'
@@ -21,34 +21,6 @@ import Image from 'next/image'
 import { authClient } from '@/lib/auth-client'
 
 // This is sample data.
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
-  navMain: [
-    {
-      title: 'Insurance Claims',
-      url: '/insurance',
-      icon: SquareTerminal,
-      isActive: true,
-      visible: ['admin', 'agent'],
-    },
-    {
-      title: 'Agents',
-      url: '/admin/agent-control',
-      icon: Bot,
-      visible: ['admin'],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      visible: ['admin'],
-    },
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = authClient.useSession()
@@ -57,6 +29,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     name: session?.user?.name || '',
     email: session?.user?.email || '',
     avatar: '',
+  }
+  const data = {
+    navMain: [
+      {
+        title: 'Home',
+        url: `/${role}`,
+        icon: HomeIcon,
+        isActive: true,
+        visible: ['admin', 'agent', 'user'],
+      },
+      {
+        title: 'Insurance Claims',
+        url: '/insurance',
+        icon: SquareTerminal,
+        isActive: true,
+        visible: ['admin', 'agent'],
+      },
+      {
+        title: 'Agents',
+        url: '/admin/agent-control',
+        icon: Bot,
+        visible: ['admin'],
+      },
+      {
+        title: 'Documentation',
+        url: '#',
+        icon: BookOpen,
+        visible: ['admin'],
+      },
+    ],
   }
   return (
     <Sidebar collapsible='icon' {...props}>

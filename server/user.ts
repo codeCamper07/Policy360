@@ -2,48 +2,6 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 
-export const adminSignIn = async (username: string, password: string) => {
-  try {
-    await auth.api.signInUsername({
-      body: {
-        username,
-        password,
-      },
-    })
-    return {
-      success: true,
-      message: 'Admin Login Successful',
-    }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'unknown error'
-    return {
-      success: false,
-      message: message,
-    }
-  }
-}
-
-export const signIn = async (username: string, password: string) => {
-  try {
-    await auth.api.signInUsername({
-      body: {
-        username,
-        password,
-      },
-    })
-    return {
-      success: true,
-      message: 'Admin Login Successful',
-    }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'unknown error'
-    return {
-      success: false,
-      message: message,
-    }
-  }
-}
-
 export const signUp = async (
   username: string,
   displayUsername: string,

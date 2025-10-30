@@ -101,10 +101,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <button
-                onClick={handleSignOut}
-                className='flex items-center gap-1'>
+            <DropdownMenuItem onClick={handleSignOut}>
+              <button className='flex items-center gap-1'>
                 <LogOut />
                 Log out
               </button>
