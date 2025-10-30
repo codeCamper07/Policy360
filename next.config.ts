@@ -1,12 +1,9 @@
-import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
+// @ts-check
+
+/** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  turbopack: (config: any, { isServer }: { isServer: any }) => {
-    if (isServer) {
-      config.plugins = [...config.plugins, new PrismaPlugin()]
-    }
-    return config
-  },
+  /* config options here */
 }
 
-export default nextConfig
+module.exports = nextConfig
