@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { BookOpen, Bot, SquareTerminal, HomeIcon } from 'lucide-react'
+import { BookOpen, Bot, SquareTerminal, HomeIcon, MapPin } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
 import { NavUser } from '@/components/nav-user'
@@ -50,6 +50,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: 'Agents',
         url: '/admin/agent-control',
         icon: Bot,
+        visible: ['admin'],
+      },
+      {
+        title: 'Locations',
+        url: '/admin/location',
+        icon: MapPin,
         visible: ['admin'],
       },
       {

@@ -80,6 +80,7 @@ const AdminAgentPage = () => {
   )
   const [selectedMandalId, setSelectedMandalId] = useState<number | null>(null)
   const [loading, setLoading] = useState<Boolean>(false)
+  const [agentLoading, setAgentLoading] = useState<Boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,9 +101,11 @@ const AdminAgentPage = () => {
     }
   }
   const fetchAgents = async () => {
+    setAgentLoading(true)
     const response = await agentData()
     if (response) {
       setAgents(response.data)
+      setAgentLoading(false)
     }
   }
 
@@ -427,6 +430,10 @@ const AdminAgentPage = () => {
                 </TableRow>
               )
             })
+          ) : agentLoading ? (
+            <TableRow>
+              <TableCell>Loading...!</TableCell>
+            </TableRow>
           ) : (
             <TableRow className='flex justify-center items-center'>
               <TableCell>Nothing to see here!</TableCell>
