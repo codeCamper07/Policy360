@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { defineConfig } from 'prisma/config'
+import { defineConfig, env } from 'prisma/config'
 dotenv.config()
 
 export default defineConfig({
@@ -9,6 +9,6 @@ export default defineConfig({
   },
   engine: 'classic',
   datasource: {
-    url: `${process.env.DATABASE_URL}`,
+    url: env('DATABASE_URL'),
   },
 })
