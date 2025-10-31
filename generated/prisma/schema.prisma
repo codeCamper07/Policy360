@@ -5,18 +5,16 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output = "../generated/prisma"
+  provider   = "prisma-client-js"
+  output     = "../generated/prisma"
   engineType = "client"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-
-
 
 model User {
   id              String    @id
@@ -29,7 +27,7 @@ model User {
   username        String?
   displayUsername String?
   role            String?
-  phone           String?   
+  phone           String?
   banned          Boolean?  @default(false)
   banReason       String?
   banExpires      DateTime?
@@ -88,11 +86,11 @@ model Verification {
 }
 
 model Location {
-  id            Int    @id @default(autoincrement())
-  name          String
-  locationType  String
-  code          String
-  parentId      Int?
-  parent        Location?  @relation("LocationHierarchy", fields: [parentId], references: [id])
-  children      Location[] @relation("LocationHierarchy")
+  id           Int        @id @default(autoincrement())
+  name         String
+  locationType String
+  code         String
+  parentId     Int?
+  parent       Location?  @relation("LocationHierarchy", fields: [parentId], references: [id])
+  children     Location[] @relation("LocationHierarchy")
 }
