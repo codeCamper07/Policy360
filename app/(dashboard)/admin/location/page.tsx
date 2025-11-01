@@ -1,11 +1,13 @@
 import { TableComponent } from '@/components/tableComponent'
 import TableSearch from '@/components/tableSearch'
-import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Prisma } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
-import { Edit2Icon, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { LocationDialog } from './dialog'
+import { EditLocationDialog } from './editDialog'
+import PaginationComponent from '@/components/paginationComponent'
+import { items_per_page } from '@/lib/settings'
 
 const LocationPage = async ({ searchParams }: { searchParams: any }) => {
   const { page, order, ...queryParams } = await searchParams
@@ -33,11 +35,16 @@ const LocationPage = async ({ searchParams }: { searchParams: any }) => {
     }
   }
 
-  const data = await prisma.location.findMany({
-    where: query,
-    take: 10,
-    skip: 10 * (p - 1),
-  })
+  const [data, count] = await prisma.$transaction([
+    prisma.location.findMany({
+      where: query,
+      take: items_per_page,
+      skip: items_per_page * (p - 1),
+    }),
+    prisma.location.count({
+      where: query,
+    }),
+  ])
 
   const columns = [
     {
@@ -90,9 +97,7 @@ const LocationPage = async ({ searchParams }: { searchParams: any }) => {
           <button>
             <Trash2 size={20} className='text-red-500' />
           </button>
-          <button>
-            <Edit2Icon size={20} />
-          </button>
+          <EditLocationDialog data={items} />
         </TableCell>
       </TableRow>
     )
@@ -109,6 +114,7 @@ const LocationPage = async ({ searchParams }: { searchParams: any }) => {
           </div>
         </div>
         <TableComponent columns={columns} renderRow={renderRow} data={data} />
+        <PaginationComponent page={p} count={count} />
       </div>
     </div>
   )

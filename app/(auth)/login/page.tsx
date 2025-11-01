@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -41,12 +42,17 @@ const Login05Page = () => {
     resolver: zodResolver(formSchema),
   })
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true)
-    await authClient.signIn.username({
-      username: data.username,
-      password: data.password,
+    const { data, error } = await authClient.signIn.username({
+      username: values.username,
+      password: values.password,
     })
+    if (error) {
+      toast.error(error.message)
+    } else {
+      toast.success('Logged In successful')
+    }
     setLoading(false)
   }
 

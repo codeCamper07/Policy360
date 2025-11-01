@@ -1,4 +1,5 @@
 'use server'
+import { Prisma } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
 
 export const agentData = async () => {
@@ -20,5 +21,30 @@ export const agentData = async () => {
     }
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const addLocation = async (
+  data: Prisma.LocationUncheckedCreateInput,
+) => {
+  try {
+    await prisma.location.create({
+      data: {
+        name: data.name,
+        locationType: data.locationType.toUpperCase(),
+        code: data.code,
+        parentId: data?.parentId,
+      },
+    })
+    return {
+      success: true,
+      message: 'Added Location successfully',
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    return {
+      success: false,
+      message: message,
+    }
   }
 }

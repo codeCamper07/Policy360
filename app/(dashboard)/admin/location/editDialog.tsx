@@ -24,6 +24,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { addLocation } from '@/server/actions'
 import { toast } from 'sonner'
+import { Edit2 } from 'lucide-react'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -32,35 +33,39 @@ const formSchema = z.object({
   parentId: z.number().optional().nullable(),
 })
 
-export function LocationDialog() {
+export function EditLocationDialog({
+  data,
+}: {
+  data: {
+    name: string
+    locationType: string
+    code: string
+    id: number
+    parentId: number | null
+  }
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      locationType: '',
-      code: '',
-      parentId: null,
+      name: data.name,
+      locationType: data.locationType,
+      code: data.code,
+      parentId: data.parentId,
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { success, message } = await addLocation(values)
     success ? toast.success(message) : toast.error(message)
-    if (success) {
-      form.reset({
-        name: '',
-        locationType: '',
-        code: '',
-        parentId: null,
-      })
-    }
   }
 
   return (
     <Dialog>
       <Form {...form}>
         <DialogTrigger asChild>
-          <Button variant='outline'>Add Location</Button>
+          <Button variant='outline'>
+            <Edit2 />
+          </Button>
         </DialogTrigger>
         <DialogContent className='sm:max-w-[525px]'>
           <form onSubmit={form.handleSubmit(onSubmit)}>
