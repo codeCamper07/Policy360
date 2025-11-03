@@ -106,11 +106,13 @@ const LocationPage = async ({ searchParams }: { searchParams: any }) => {
   return (
     <div className='p-4'>
       <div className='bg-card py-5 px-5 rounded-xl'>
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between max-md:flex-col'>
           <h1 className='text-2xl font-bold'>Service Locations</h1>
-          <div className='flex gap-2 items-center'>
+          <div className='flex gap-2 items-center max-md:flex-col mt-2'>
             <TableSearch />
-            <LocationDialog />
+            <div className='self-end'>
+              <LocationDialog />
+            </div>
           </div>
         </div>
         <TableComponent columns={columns} renderRow={renderRow} data={data} />

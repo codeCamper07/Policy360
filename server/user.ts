@@ -1,6 +1,7 @@
 'use server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { success } from 'zod'
 
 export const signUp = async (
   username: string,
@@ -67,5 +68,48 @@ export const createAgent = async (
     }
   } catch (error) {
     return { success: false, message: 'Failed to create agent' }
+  }
+}
+
+export const createCustomer = async (
+  name: string,
+  username: string,
+  email: string,
+  phone: string,
+) => {
+  const checkUsername = await auth.api.isUsernameAvailable({
+    body: { username },
+  })
+  if (checkUsername?.available) {
+    try {
+      await auth.api.createUser({
+        body: {
+          name,
+          email,
+          password: 'customer@123',
+          data: {
+            username: username,
+            displayUsername: username,
+            phone: phone,
+            role: 'user',
+          },
+        },
+      })
+      return {
+        success: true,
+        message: 'User created successfully',
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown Error'
+      return {
+        success: false,
+        message: message,
+      }
+    }
+  } else {
+    return {
+      success: false,
+      message: 'Username Exists',
+    }
   }
 }

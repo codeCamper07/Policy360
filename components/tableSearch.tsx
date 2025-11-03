@@ -15,7 +15,7 @@ const TableSearch = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className='flex items-center gap-2 text-xs w-full md:w-auto rounded-full ring-[1.5px] ring-gray-300 px-2 '>
+      className='flex items-center gap-2 text-xs w-full md:w-auto rounded-full ring-[1.5px] ring-gray-300 px-2'>
       <Search className='h-3 w-3' />
       <input
         name='search'

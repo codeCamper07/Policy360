@@ -14,9 +14,10 @@ export const user = ac.newRole({
 
 export const admin = ac.newRole({
   project: ['create', 'update', 'delete'],
+  ...adminAc.statements,
 })
 
 export const agent = ac.newRole({
   project: ['create', 'update'],
-  user: ['list'], // Add specific permissions for agent role
+  user: ['create'], // Add specific permissions for agent role
 })

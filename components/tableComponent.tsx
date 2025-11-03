@@ -13,13 +13,7 @@ export function TableComponent({
 }: {
   columns: { accessor: string; name: string; className: string }[]
   renderRow: any
-  data: {
-    id: number
-    name: string
-    locationType: string
-    code: string
-    parentId: number | null
-  }[]
+  data: any[]
 }) {
   return (
     <Table className='bg-card rounded-lg'>

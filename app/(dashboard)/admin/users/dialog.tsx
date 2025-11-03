@@ -22,37 +22,39 @@ import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { addLocation } from '@/server/actions'
 import { toast } from 'sonner'
+import { createCustomer } from '@/server/user'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
-  locationType: z.string().min(2, 'Please Enter Location Type'),
-  code: z.string().min(1, 'Please enter code'),
-  parentId: z.number().optional().nullable(),
+  username: z.string().min(2, 'Please Enter Location Type'),
+  email: z.email({ error: 'Please Enter correct email' }),
+  phone: z.e164({ error: 'Please Enter correct phone' }),
+  address: z.string().min(8, 'Plase Give a Proper Address'),
 })
 
-export function LocationDialog() {
+export function UserDialog() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      locationType: '',
-      code: '',
-      parentId: null,
+      username: '',
+      email: '',
+      phone: '',
+      address: '',
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { success, message } = await addLocation(values)
+    const { success, message } = await createCustomer(
+      values.name,
+      values.username,
+      values.email,
+      values.phone,
+    )
     success ? toast.success(message) : toast.error(message)
     if (success) {
-      form.reset({
-        name: '',
-        locationType: '',
-        code: '',
-        parentId: null,
-      })
+      form.reset()
     }
   }
 
@@ -60,14 +62,14 @@ export function LocationDialog() {
     <Dialog>
       <Form {...form}>
         <DialogTrigger asChild>
-          <Button variant='outline'>Add Location</Button>
+          <Button variant='outline'>Add User</Button>
         </DialogTrigger>
         <DialogContent className='sm:max-w-[525px]'>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Add Location</DialogTitle>
+              <DialogTitle>Add User</DialogTitle>
               <DialogDescription className='mb-4'>
-                Add Location that we want to extend our services
+                Add Customer details
               </DialogDescription>
             </DialogHeader>
             <div className='grid grid-cols-2 gap-4'>
@@ -77,7 +79,7 @@ export function LocationDialog() {
                   name='name'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location Name</FormLabel>
+                      <FormLabel>Customer Name</FormLabel>
                       <FormControl>
                         <Input placeholder='shadcn' {...field} />
                       </FormControl>
@@ -89,10 +91,10 @@ export function LocationDialog() {
               <div className='grid gap-3'>
                 <FormField
                   control={form.control}
-                  name='locationType'
+                  name='username'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location Type</FormLabel>
+                      <FormLabel>Username</FormLabel>
                       <FormControl>
                         <Input placeholder='shadcn' {...field} />
                       </FormControl>
@@ -104,10 +106,10 @@ export function LocationDialog() {
               <div className='grid gap-3'>
                 <FormField
                   control={form.control}
-                  name='code'
+                  name='email'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Code</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input placeholder='shadcn' {...field} />
                       </FormControl>
@@ -119,23 +121,30 @@ export function LocationDialog() {
               <div className='grid gap-3'>
                 <FormField
                   control={form.control}
-                  name='parentId'
+                  name='phone'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ParentId</FormLabel>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input placeholder='shadcn' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className='grid gap-3'>
+                <FormField
+                  control={form.control}
+                  name='address'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           type='text'
-                          placeholder='Enter a number or leave blank'
-                          // Transform the value for the input and back for the form
-                          value={
-                            field.value !== null ? String(field.value) : ''
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value
-                            field.onChange(value === '' ? null : Number(value))
-                          }}
+                          placeholder='Enter Address'
                         />
                       </FormControl>
                       <FormMessage />
@@ -154,7 +163,7 @@ export function LocationDialog() {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type='submit'>Add Location</Button>
+              <Button type='submit'>Create User</Button>
             </DialogFooter>
           </form>
         </DialogContent>
