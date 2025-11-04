@@ -33,9 +33,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = authClient.useSession()
   const role = session?.user?.role
   const userData = {
+    id: session?.user?.id || '',
     name: session?.user?.name || '',
     email: session?.user?.email || '',
-    avatar: '',
+    avatar: session?.user?.image || '',
   }
   const data = {
     navMain: [

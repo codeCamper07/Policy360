@@ -23,57 +23,48 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { createCustomer } from '@/server/user'
 import { useRouter } from 'next/navigation'
-import { Textarea } from '@/components/ui/textarea'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
   username: z.string().min(2, 'Please Enter Location Type'),
   email: z.email({ error: 'Please Enter correct email' }),
   phone: z.e164({ error: 'Please Enter correct phone' }),
-  address: z.string().min(8, 'Plase Give a Proper Address'),
+  image: z.string().optional(),
 })
 
-export function UserDialog() {
+export function AccountDialog({
+  editData,
+}: {
+  editData: { name: string; email: string; phone: string; username: string }
+}) {
   const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      username: '',
-      email: '',
-      phone: '',
-      address: '',
+      name: editData.name,
+      username: editData.username,
+      email: editData.email,
+      phone: editData.phone,
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { success, message } = await createCustomer(
-      values.name,
-      values.username,
-      values.email,
-      values.phone,
-    )
-    success ? toast.success(message) : toast.error(message)
-    if (success) {
-      form.reset()
-      router.refresh()
-    }
+    console.log(values)
   }
 
   return (
     <Dialog>
       <Form {...form}>
         <DialogTrigger asChild>
-          <Button variant='outline'>Add User</Button>
+          <Button variant='outline'>Edit</Button>
         </DialogTrigger>
         <DialogContent className='sm:max-w-[525px]'>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Add User</DialogTitle>
+              <DialogTitle>Edit</DialogTitle>
               <DialogDescription className='mb-4'>
-                Add Customer details
+                Edit your details
               </DialogDescription>
             </DialogHeader>
             <div className='grid grid-cols-2 gap-4'>
@@ -83,7 +74,7 @@ export function UserDialog() {
                   name='name'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Customer Name</FormLabel>
+                      <FormLabel>Name</FormLabel>
                       <FormControl>
                         <Input placeholder='shadcn' {...field} />
                       </FormControl>
@@ -137,21 +128,6 @@ export function UserDialog() {
                   )}
                 />
               </div>
-              <div className='grid gap-3'>
-                <FormField
-                  control={form.control}
-                  name='address'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} placeholder='Enter Address' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
             </div>
             <DialogFooter className='mt-3'>
               <DialogClose asChild>
@@ -163,7 +139,7 @@ export function UserDialog() {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type='submit'>Create User</Button>
+              <Button type='submit'>Update</Button>
             </DialogFooter>
           </form>
         </DialogContent>

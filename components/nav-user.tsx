@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from 'lucide-react'
+import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -32,6 +25,7 @@ export function NavUser({
   user,
 }: {
   user: {
+    id: string
     name: string
     email: string
     avatar: string
@@ -91,7 +85,10 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push('/account')
+                }}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
