@@ -2,6 +2,7 @@
 import { CldUploadWidget } from 'next-cloudinary'
 import { Edit2 } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
+import { toast } from 'sonner'
 
 const DisplayPicture = ({ className }: { className: string }) => {
   return (
@@ -13,6 +14,8 @@ const DisplayPicture = ({ className }: { className: string }) => {
             image: `${result?.info?.secure_url}`,
           })
         }
+        toast.success('Changed Username Successfully')
+        window.location.reload()
         widget.close()
       }}>
       {({ open }) => {
